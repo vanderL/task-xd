@@ -9,6 +9,9 @@ router.post('/',TaskValidation ,TaskController.create)
 router.get('/:id', TaskController.show)
 router.put('/:id',TaskValidation, TaskController.update)
 router.delete('/:id', TaskController.delete)
+router.put('/:id/:done', TaskController.done)
+
 router.get('/filter/all',MacaddressValidation, TaskController.all)
+router.get('/filter/late', MacaddressValidation, TaskController.late)
 
 module.exports = router
