@@ -1,8 +1,13 @@
 import React from 'react'
+import * as S from './styles'
+import Header from '../../components/Header'
 
 function Home() {
     return (
-      <h1>Home né pai!!</h1>
+      <S.Container>
+        <Header />
+        <h1>Home!!</h1>
+      </S.Container>
     );
   }
   
