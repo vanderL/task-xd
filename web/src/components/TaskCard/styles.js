@@ -18,7 +18,6 @@ export const Container = styled.div `
         opacity: 0.5;
         cursor: pointer;
     }
-    
 `
 
 export const TopCard = styled.div `
