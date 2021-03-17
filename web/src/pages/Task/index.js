@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react'
+import { Redirect } from 'react-router-dom'
+
 import * as S from './styles'
 import { format } from 'date-fns'
 
@@ -12,6 +14,7 @@ import iconCalendar from '../../assets/calendar.png'
 import iconClock from '../../assets/clock.png'
 
 function Task({match}) {
+    const [redirect, setRedirect] = useState(false) 
     const [lateCount, setLateCount] = useState()
     const [type, setType] = useState()
     const [id, setId] = useState()
@@ -33,6 +36,7 @@ function Task({match}) {
       await api.get(`/task/${match.params.id}`)
         .then(response => {
           setType(response.data.type)
+          setDone(response.data.done)
           setTitle(response.data.title)
           setDescription(response.data.description)
           setDate(format(new Date(response.data.when), 'yyyy-MM-dd'))
@@ -41,13 +45,36 @@ function Task({match}) {
     }
 
     async function Save(){
-      await api.post('/task', {
-        macaddress,
-        type, 
-        title, 
-        description, 
-        when: `${date}T${hour}:00.000`  
-      }).then(() => alert('TAREFA CADASTRADA COM SUCESSO!'))
+      if(!title) return alert("Please enter a title")
+      else if(!description) return alert("Please enter a description")
+      else if(!type) return alert("Please enter a type")
+      else if(!date) return alert("Please enter a date")
+      else if(!hour) return alert("Please enter a setHour")
+
+
+
+      const taskId = match.params.id
+      
+      if (taskId) {
+        await api.put(`/task/${taskId}`, {
+          macaddress,
+          done,
+          type, 
+          title, 
+          description, 
+          when: `${date}T${hour}:00.000`  
+        }).then(() => setRedirect(true))
+
+      } else {
+        await api.post('/task', {
+          macaddress,
+          type, 
+          title, 
+          description, 
+          when: `${date}T${hour}:00.000`  
+        }).then(() => setRedirect(true))
+
+      }
     }
 
     useEffect(() => {
@@ -58,6 +85,7 @@ function Task({match}) {
 
     return (
       <S.Container>
+        { redirect && <Redirect to="/" /> }
         <Header lateCount={lateCount} />
 
         <S.Form>

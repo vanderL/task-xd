@@ -17,7 +17,7 @@ function Header({ lateCount, clickNotification }) {
                 <Link to="/"> INÍCIO </Link>
                 <span className="dividir" />
                 
-                <Link to="/task"> NOVA TAREFA </Link>
+                <Link to="/task"> NOVO AGENDAMENTO </Link>
                 <span className="dividir" />
                 
                 <a href="#"> SINOCRIZAR CELULAR </a>

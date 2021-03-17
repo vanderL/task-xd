@@ -14,6 +14,8 @@ export const Container = styled.div `
 
     margin: 20px;
     transition: all 0.6s ease;
+    opacity: ${props => props.done ? 0.5 : 1};
+    
     &:hover {
         opacity: 0.5;
         cursor: pointer;
