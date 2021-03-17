@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import * as S from './styles'
+import { format } from 'date-fns'
 
 import api from '../../services/api'
 
@@ -10,7 +11,7 @@ import TypeIcons from '../../utils/typeIcons'
 import iconCalendar from '../../assets/calendar.png'
 import iconClock from '../../assets/clock.png'
 
-function Task() {
+function Task({match}) {
     const [lateCount, setLateCount] = useState()
     const [type, setType] = useState()
     const [id, setId] = useState()
@@ -28,6 +29,17 @@ function Task() {
         })
     }
 
+    async function LoadTaskDetails() {
+      await api.get(`/task/${match.params.id}`)
+        .then(response => {
+          setType(response.data.type)
+          setTitle(response.data.title)
+          setDescription(response.data.description)
+          setDate(format(new Date(response.data.when), 'yyyy-MM-dd'))
+          setHour(format(new Date(response.data.when), 'HH:mm'))
+        })
+    }
+
     async function Save(){
       await api.post('/task', {
         macaddress,
@@ -40,6 +52,7 @@ function Task() {
 
     useEffect(() => {
       lateVerifyTasks()
+      LoadTaskDetails()
 
     }, [])
 
