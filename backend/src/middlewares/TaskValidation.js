@@ -14,8 +14,7 @@ const TaskValidation = async (req, res, next) => {
         return res.status(400).json({ error: "description é obrigatorio"})
     else if (!when)
         return res.status(400).json({ error: "when é obrigatorio"})
-    else if (isPast(new Date(when)))
-        return res.status(400).json({ error: "Data não pode ser cadastrada no passado!"})
+    
     else{
         let exists
 
@@ -27,6 +26,9 @@ const TaskValidation = async (req, res, next) => {
                 'macaddress': {'$in': macaddress}
             })
         } else {
+            if (isPast(new Date(when)))
+                return res.status(400).json({ error: "Data não pode ser cadastrada no passado!"})
+
             exists = await TaskModel
                 .findOne({
                     'when': {'$eq': new Date(when)},

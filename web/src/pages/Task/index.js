@@ -24,6 +24,8 @@ function Task({match}) {
     const [date, setDate] = useState()
     const [hour, setHour] = useState()
     const [macaddress, setMacAddress] = useState('22:22:11:33:33:22')
+    
+    const taskId = match.params.id
 
     async function lateVerifyTasks() {
       await api.get(`/task/filter/late/22:22:11:33:33:22`)
@@ -53,7 +55,6 @@ function Task({match}) {
 
 
 
-      const taskId = match.params.id
       
       if (taskId) {
         await api.put(`/task/${taskId}`, {
@@ -74,6 +75,14 @@ function Task({match}) {
           when: `${date}T${hour}:00.000`  
         }).then(() => setRedirect(true))
 
+      }
+    }
+
+    async function removeTask() {
+      const res = window.confirm('Tem certeza que deseja deletar?')
+      if(res == true) {
+        await api.delete(`/task/${taskId}`)
+          .then(() => setRedirect(true))
       }
     }
 
@@ -150,7 +159,7 @@ function Task({match}) {
               />
               <span> CONCLUÍDO </span>
             </div>
-            <button type="button"> EXCLUIR </button>
+            { taskId && <button type="button" onClick={removeTask}> EXCLUIR </button> }
           </S.Options>
 
           <S.Save>
