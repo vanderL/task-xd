@@ -1,12 +1,27 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import * as S from './styles'
 import { Link } from 'react-router-dom'
 
 import logo from '../../assets/logo.png'
 import bell from '../../assets/bell.png'
 
+import api from '../../services/api'
 
-function Header({ lateCount, clickNotification }) {
+function Header({ clickNotification }) {
+    const [lateCount, setLateCount] = useState()
+    
+    async function lateVerifyTasks() {
+        
+        await api.get(`/task/filter/late/22:22:11:33:33:22`)
+          .then(response => {
+            setLateCount(response.data.length)
+          })
+      }
+
+    useEffect(() => {
+        lateVerifyTasks()
+    }, [])
+
     return (
         <S.Container>
             <S.LeftSide>
