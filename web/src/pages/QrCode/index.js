@@ -1,34 +1,40 @@
-import React, {useState, useEffect} from 'react'
-import { Link } from 'react-router-dom'
-import * as S from './styles'
+import React, { useState } from 'react'
+import {Redirect} from 'react-router-dom'
+import Qr from 'qrcode.react'
 
-import api from '../../services/api'
+import * as S from './styles'
 
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 function QrCode() {
-  const [lateCount, setLateCount] = useState()
+    const [mac, setMac] = useState()
+    const [redirect, setRedirect] = useState(false)
 
-  async function lateVerifyTasks() {
-    await api.get(`/task/filter/late/22:22:11:33:33:22`)
-      .then(response => {
-        setLateCount(response.data.length)
-      })
-  }
-  useEffect(() => {
-    lateVerifyTasks()
+    async function SaveMac() {
+      await localStorage.setItem('@todo/macaddress', mac)
+      setRedirect(true)
 
-  }, [])
-
+      window.location.reload()
+    }
     return (
       <S.Container>
-        <Header lateCount={lateCount} />
+        {redirect && <Redirect to='/' />}
+        <Header />
 
         <S.Content>
           <h1>Capture o qrcode pelo o APP</h1>
-          <S.QrCodeArea></S.QrCodeArea>
-          <p>Suas atividades serão sicronizadas com a do seu celular</p>
+          <p>Suas agenda será sicronizada com a do seu celular</p>
+          <S.QrCodeArea>
+            <Qr value='teste' size={400} />
+          </S.QrCodeArea>
+          
+          <S.ValidationCode>
+            <span>Digite a numeração que apareceu no celular</span>
+            <input type="text" onChange={e => setMac(e.target.value)} value={mac}/>
+            <button type="button" onClick={SaveMac}> SINOCRIZAR {mac} </button>
+          </S.ValidationCode>
+
         </S.Content>
 
         <Footer />

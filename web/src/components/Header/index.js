@@ -6,6 +6,7 @@ import logo from '../../assets/logo.png'
 import bell from '../../assets/bell.png'
 
 import api from '../../services/api'
+import isConnected from '../../utils/isConnected'
 
 function Header({ clickNotification }) {
     const [lateCount, setLateCount] = useState()
@@ -16,7 +17,12 @@ function Header({ clickNotification }) {
           .then(response => {
             setLateCount(response.data.length)
           })
-      }
+    }
+
+    async function logout() {
+        localStorage.removeItem('@todo/macaddress')
+        window.location.reload()
+    }
 
     useEffect(() => {
         lateVerifyTasks()
@@ -35,7 +41,13 @@ function Header({ clickNotification }) {
                 <Link to="/task"> NOVO AGENDAMENTO </Link>
                 
                 <span className="dividir" />
-                <Link to="/qrcode"> SINOCRIZAR CELULAR </Link>
+                {!isConnected 
+                    ?
+                    <Link to="/qrcode"> SICRONIZAR CELULAR </Link>
+                    :
+                    <button type="button" onClick={logout}> SAIR </button>
+                }
+
                 
                 {
                     lateCount && 
