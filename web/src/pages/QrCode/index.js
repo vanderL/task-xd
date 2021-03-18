@@ -12,10 +12,15 @@ function QrCode() {
     const [redirect, setRedirect] = useState(false)
 
     async function SaveMac() {
-      await localStorage.setItem('@todo/macaddress', mac)
-      setRedirect(true)
+      if(!mac) {
+        alert('Informe o código que apareceu no celular')
+      } else{
+        await localStorage.setItem('@todo/macaddress', mac)
+        setRedirect(true)
+  
+        window.location.reload()
+      }
 
-      window.location.reload()
     }
     return (
       <S.Container>

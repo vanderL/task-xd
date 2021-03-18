@@ -23,7 +23,6 @@ function Task({match}) {
     const [description, setDescription] = useState()
     const [date, setDate] = useState()
     const [hour, setHour] = useState()
-    const [macaddress, setMacAddress] = useState('22:22:11:33:33:22')
     
     const taskId = match.params.id
 
@@ -51,7 +50,7 @@ function Task({match}) {
       
       if (taskId) {
         await api.put(`/task/${taskId}`, {
-          macaddress,
+          macaddress: isConnected,
           done,
           type, 
           title, 
@@ -61,7 +60,7 @@ function Task({match}) {
 
       } else {
         await api.post('/task', {
-          macaddress,
+          macaddress: isConnected,
           type, 
           title, 
           description, 

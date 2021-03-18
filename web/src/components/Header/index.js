@@ -13,7 +13,7 @@ function Header({ clickNotification }) {
     
     async function lateVerifyTasks() {
         
-        await api.get(`/task/filter/late/22:22:11:33:33:22`)
+        await api.get(`/task/filter/late/${isConnected}`)
           .then(response => {
             setLateCount(response.data.length)
           })
