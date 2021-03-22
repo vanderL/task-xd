@@ -23,6 +23,10 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25
     },
+    notificationText: {
+        fontWeight: 'bold',
+        color: '#ee6b26'
+    },
     circle: {
         width: 18,
         height: 18,
