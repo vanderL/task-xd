@@ -13,6 +13,7 @@ export default function Home() {
     const [filter, setFilter] = useState('today')
     const [tasks,  setTasks] = useState([])
     const [load, setLoad] = useState(false)
+    const [lateCount, setLateCount] = useState()
 
     async function loadTasks() {
         setLoad(true)
@@ -23,8 +24,19 @@ export default function Home() {
         })
     }
 
+    async function lateVerifyTasks() {        
+        await api.get(`/task/filter/late/22:22:11:33:33:22`).then(response => {
+            setLateCount(response.data.length)
+        })
+    }
+
+    async function Notification() {
+        setFilter('late')
+    }
+
     useEffect(() => {
         loadTasks()
+        lateVerifyTasks()
     }, [filter])
     
     return(
@@ -32,6 +44,8 @@ export default function Home() {
             <Header 
                 showNotification={true}
                 showBack={false} 
+                pressNotification={Notification}
+                late={lateCount}
             />
 
             <View style={styles.filter}>
@@ -57,7 +71,7 @@ export default function Home() {
             </View>
             
             <View style={styles.title}>
-                <Text style={styles.titleText}>AGENDAMENTO</Text>
+                <Text style={styles.titleText}>AGENDAMENTOS {filter == 'late' && ' ATRASADOS'}</Text>
             </View>
 
             <ScrollView style={styles.content} contentContainerStyle={{alignItems: 'center'}}>
