@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 
 import styles from './styles'
 
@@ -7,8 +7,25 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import TaskCard from '../../components/TaskCard'
 
+import api from '../../services/api'
+
 export default function Home() {  
     const [filter, setFilter] = useState('today')
+    const [tasks,  setTasks] = useState([])
+    const [load, setLoad] = useState(false)
+
+    async function loadTasks() {
+        setLoad(true)
+        
+        await api.get('/task/filter/all/22:22:11:33:33:22').then(response => {
+            setTasks(response.data)
+            setLoad(false)
+        })
+    }
+
+    useEffect(() => {
+        loadTasks()
+    }, [])
     
     return(
         <View style={styles.container}>
@@ -44,14 +61,14 @@ export default function Home() {
             </View>
 
             <ScrollView style={styles.content} contentContainerStyle={{alignItems: 'center'}}>
-                <TaskCard done={true}/>
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
+                {
+                    load ? 
+                    <ActivityIndicator color='#ee6b26' size={60}/>
+                    :
+                    tasks.map(t => (
+                        <TaskCard done={false} title={t.title} when={t.when}/>
+                    ))
+                }
             </ScrollView>
 
 
